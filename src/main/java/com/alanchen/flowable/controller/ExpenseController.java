@@ -7,9 +7,9 @@ import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.image.ProcessDiagramGenerator;
 import org.flowable.task.api.Task;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
@@ -23,7 +23,7 @@ import java.util.List;
  * @description
  * @date 2020/10/16
  */
-@Controller
+@RestController
 @RequestMapping(value = "expense")
 public class ExpenseController {
     @Autowired
@@ -43,8 +43,7 @@ public class ExpenseController {
      * @param money     报销金额
      * @param descption 描述
      */
-    @RequestMapping(value = "add")
-    @ResponseBody
+    @GetMapping("/add")
     public String addExpense(String userId, Integer money, String descption) {
         //启动流程
         HashMap<String, Object> map = new HashMap<>();
@@ -57,8 +56,7 @@ public class ExpenseController {
     /**
      * 获取审批管理列表
      */
-    @RequestMapping(value = "/list")
-    @ResponseBody
+    @GetMapping("/list")
     public Object list(String userId) {
         List<Task> tasks = taskService.createTaskQuery().taskAssignee(userId).orderByTaskCreateTime().desc().list();
         for (Task task : tasks) {
@@ -72,8 +70,7 @@ public class ExpenseController {
      *
      * @param taskId 任务ID
      */
-    @RequestMapping(value = "apply")
-    @ResponseBody
+    @GetMapping("/apply")
     public String apply(String taskId) {
         Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
         if (task == null) {
@@ -89,8 +86,7 @@ public class ExpenseController {
     /**
      * 拒绝
      */
-    @ResponseBody
-    @RequestMapping(value = "reject")
+    @GetMapping("/reject")
     public String reject(String taskId) {
         HashMap<String, Object> map = new HashMap<>();
         map.put("outcome", "驳回");
@@ -103,7 +99,7 @@ public class ExpenseController {
      *
      * @param processId 任务ID
      */
-    @RequestMapping(value = "processDiagram")
+    @GetMapping("/processDiagram")
     public void genProcessDiagram(HttpServletResponse httpServletResponse, String processId) throws Exception {
         ProcessInstance pi = runtimeService.createProcessInstanceQuery().processInstanceId(processId).singleResult();
 
