@@ -9,6 +9,7 @@ import org.flowable.task.api.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
@@ -41,7 +42,7 @@ public class ProcessDiagramController {
      * @param processId 任务ID
      */
     @RequestMapping(value = "processDiagram")
-    public void genProcessDiagram(HttpServletResponse httpServletResponse, String processId) throws Exception {
+    public void genProcessDiagram(HttpServletResponse httpServletResponse, @RequestParam String processId) throws Exception {
         ProcessInstance pi = runtimeService.createProcessInstanceQuery().processInstanceId(processId).singleResult();
 
         //流程走完的不显示图

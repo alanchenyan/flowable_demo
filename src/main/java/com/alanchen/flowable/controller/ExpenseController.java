@@ -6,28 +6,26 @@ import org.flowable.task.api.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.List;
 
 /**
  * @author Alan Chen
- * @description
+ * @description 报销流程
  * @date 2020/10/16
  */
 @RestController
 @RequestMapping(value = "expense")
 public class ExpenseController {
+
     @Autowired
     private RuntimeService runtimeService;
+
     @Autowired
     private TaskService taskService;
-    @Autowired
-    private RepositoryService repositoryService;
-    @Autowired
-    private ProcessEngine processEngine;
 
-/***************此处为业务代码******************/
     /**
      * 添加报销
      *
@@ -36,7 +34,7 @@ public class ExpenseController {
      * @param descption 描述
      */
     @GetMapping("/add")
-    public String addExpense(String userId, Integer money, String descption) {
+    public String addExpense(@RequestParam String userId, @RequestParam Integer money) {
         //启动流程
         HashMap<String, Object> map = new HashMap<>();
         map.put("taskUser", userId);
@@ -49,7 +47,7 @@ public class ExpenseController {
      * 获取审批管理列表
      */
     @GetMapping("/list")
-    public Object list(String userId) {
+    public Object list(@RequestParam String userId) {
         List<Task> tasks = taskService.createTaskQuery().taskAssignee(userId).orderByTaskCreateTime().desc().list();
         for (Task task : tasks) {
             System.out.println(task.toString());
@@ -63,7 +61,7 @@ public class ExpenseController {
      * @param taskId 任务ID
      */
     @GetMapping("/apply")
-    public String apply(String taskId) {
+    public String apply(@RequestParam String taskId) {
         Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
         if (task == null) {
             throw new RuntimeException("流程不存在");
@@ -79,62 +77,10 @@ public class ExpenseController {
      * 拒绝
      */
     @GetMapping("/reject")
-    public String reject(String taskId) {
+    public String reject(@RequestParam String taskId) {
         HashMap<String, Object> map = new HashMap<>();
         map.put("outcome", "驳回");
         taskService.complete(taskId, map);
         return "reject";
     }
-
-//    /**
-//     * 生成流程图
-//     *
-//     * @param processId 任务ID
-//     */
-//    @RequestMapping(value = "processDiagram")
-//    public void genProcessDiagram(HttpServletResponse httpServletResponse, String processId) throws Exception {
-//        ProcessInstance pi = runtimeService.createProcessInstanceQuery().processInstanceId(processId).singleResult();
-//
-//        //流程走完的不显示图
-//        if (pi == null) {
-//            return;
-//        }
-//        Task task = taskService.createTaskQuery().processInstanceId(pi.getId()).singleResult();
-//        //使用流程实例ID，查询正在执行的执行对象表，返回流程实例对象
-//        String InstanceId = task.getProcessInstanceId();
-//        List<Execution> executions = runtimeService
-//                .createExecutionQuery()
-//                .processInstanceId(InstanceId)
-//                .list();
-//
-//        //得到正在执行的Activity的Id
-//        List<String> activityIds = new ArrayList<>();
-//        List<String> flows = new ArrayList<>();
-//        for (Execution exe : executions) {
-//            List<String> ids = runtimeService.getActiveActivityIds(exe.getId());
-//            activityIds.addAll(ids);
-//        }
-//
-//        //获取流程图
-//        BpmnModel bpmnModel = repositoryService.getBpmnModel(pi.getProcessDefinitionId());
-//        ProcessEngineConfiguration engconf = processEngine.getProcessEngineConfiguration();
-//        ProcessDiagramGenerator diagramGenerator = engconf.getProcessDiagramGenerator();
-//        InputStream in = diagramGenerator.generateDiagram(bpmnModel, "png", activityIds, flows, engconf.getActivityFontName(), engconf.getLabelFontName(), engconf.getAnnotationFontName(), engconf.getClassLoader(), 1.0);
-//        OutputStream out = null;
-//        byte[] buf = new byte[1024];
-//        int legth = 0;
-//        try {
-//            out = httpServletResponse.getOutputStream();
-//            while ((legth = in.read(buf)) != -1) {
-//                out.write(buf, 0, legth);
-//            }
-//        } finally {
-//            if (in != null) {
-//                in.close();
-//            }
-//            if (out != null) {
-//                out.close();
-//            }
-//        }
-//    }
 }
