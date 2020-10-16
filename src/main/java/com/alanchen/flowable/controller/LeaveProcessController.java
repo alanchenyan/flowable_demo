@@ -3,6 +3,7 @@ package com.alanchen.flowable.controller;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.TaskService;
 import org.flowable.engine.runtime.ProcessInstance;
+import org.flowable.task.api.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author Alan Chen
@@ -40,6 +42,18 @@ public class LeaveProcessController {
         //map.put("descption", descption);
         ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("Leave", map);
         return "提交成功.流程Id为：" + processInstance.getId();
+    }
+
+    /**
+     * 获取审批管理列表
+     */
+    @GetMapping("/list")
+    public Object list(@RequestParam String userId) {
+        List<Task> tasks = taskService.createTaskQuery().taskAssignee(userId).orderByTaskCreateTime().desc().list();
+        for (Task task : tasks) {
+            System.out.println(task.toString());
+        }
+        return tasks.toArray().toString();
     }
 
 }

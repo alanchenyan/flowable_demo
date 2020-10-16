@@ -3,7 +3,7 @@
   <process id="Leave" name="LeaveProcess" isExecutable="true">
     <documentation>请假流程</documentation>
     <startEvent id="startEvent1" name="开始" flowable:formFieldValidation="true"></startEvent>
-    <userTask id="sid-32F91A77-CCFC-49D7-AFC1-CE229AE6A2BD" name="员工填请假单" flowable:formFieldValidation="true"></userTask>
+    <userTask id="sid-32F91A77-CCFC-49D7-AFC1-CE229AE6A2BD" name="员工填请假单" flowable:assignee="${taskUser}" flowable:formFieldValidation="true"></userTask>
     <userTask id="sid-335BEAA8-CF77-4331-89F9-FECC2FC21DE1" name="部门主管审核" flowable:formFieldValidation="true"></userTask>
     <userTask id="sid-C0DCD60C-3F00-4A96-AEA2-FCE0B9B8AF89" name="总经理审核" flowable:formFieldValidation="true"></userTask>
     <endEvent id="sid-3F17CE80-5D76-462E-86C6-764C04605E4D" name="结束"></endEvent>
