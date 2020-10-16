@@ -15,12 +15,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 @Order(SecurityProperties.BASIC_AUTH_ORDER)
 public class WebSecurityConfigurer extends GlobalWebSecurityConfigurer {
 
-
     @Override
     protected HttpSecurity customConfigure(HttpSecurity http) throws Exception {
 
         http.cors().and().csrf().disable().authorizeRequests()
-                .antMatchers("/expense/**").permitAll()
+                .antMatchers("/**").permitAll()
                 .anyRequest().authenticated();
         return http;
     }
