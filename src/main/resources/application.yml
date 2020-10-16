@@ -5,21 +5,8 @@ spring:
     username: activiti_u
     password: activiti_PWD_123
 
-  activiti:
-    database-schema-update: drop-create
-    db-history-used: true   #开启历史信息
-
-  redis:
-    database: 0
-    host: 39.108.250.186
-    port: 6379
-    password: JinXin@666
-    jedis:
-      pool:
-        max-active: 500  #连接池的最大数据库连接数。设为0表示无限制
-        max-idle: 20   #最大空闲数
-        max-wait: -1
-        min-idle: 5
-    timeout: 1000
+flowable:
+  #关闭定时任务JOB
+  async-executor-activate: false
 
 
