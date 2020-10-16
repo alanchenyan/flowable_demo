@@ -31,7 +31,6 @@ public class ExpenseController {
      *
      * @param userId    用户Id
      * @param money     报销金额
-     * @param descption 描述
      */
     @GetMapping("/add")
     public String addExpense(@RequestParam String userId, @RequestParam Integer money) {

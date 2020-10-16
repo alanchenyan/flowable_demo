@@ -37,7 +37,7 @@ public class LeaveProcessController {
         //启动流程
         HashMap<String, Object> map = new HashMap<>();
         map.put("taskUser", userId);
-        map.put("descption", descption);
+        //map.put("descption", descption);
         ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("Leave", map);
         return "提交成功.流程Id为：" + processInstance.getId();
     }
